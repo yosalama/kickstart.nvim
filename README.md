@@ -1,6 +1,19 @@
-# kickstart.nvim
+# My NeoVim Configuration
 
-https://github.com/kdheepak/kickstart.nvim/assets/1813121/f3ff9a2b-c31f-44df-a4fa-8a0d7b17cf7b
+                                                               ▄ ▄                   
+                                                           ▄   ▄▄▄     ▄ ▄▄▄ ▄ ▄     
+                                                           █ ▄ █▄█ ▄▄▄ █ █▄█ █ █     
+                                                        ▄▄ █▄█▄▄▄█ █▄█▄█▄▄█▄▄█ █     
+                                                      ▄ █▄▄█ ▄ ▄▄ ▄█ ▄▄▄▄▄▄▄▄▄▄▄▄▄▄  
+                                                      █▄▄▄▄ ▄▄▄ █ ▄ ▄▄▄ ▄ ▄▄▄ ▄ ▄ █ ▄
+                                                    ▄ █ █▄█ █▄█ █ █ █▄█ █ █▄█ ▄▄▄ █ █
+                                                    █▄█ ▄ █▄▄█▄▄█ █ ▄▄█ █ ▄ █ █▄█▄█ █
+                                                        █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█ █▄█▄▄▄█    
+                                                           
+                                                              "العلم قبل القول والعمل" 
+
+This configuration is based on kickstart.nvim and inspired by Lazyvim. 
+The ascii art above is stolen from NvChad. :)
 
 ### Introduction
 
