@@ -51,18 +51,10 @@ return {
     },
     opts = {
       options = {
-        -- stylua: ignore
         close_command = function(n) require("mini.bufremove").delete(n, false) end,
-        -- stylua: ignore
         right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end,
         diagnostics = "nvim_lsp",
         always_show_bufferline = false,
-        -- diagnostics_indicator = function(_, _, diag)
-        --   local icons = require("lazyvim.config").icons.diagnostics
-        --   local ret = (diag.error and icons.Error .. diag.error .. " " or "")
-        --     .. (diag.warning and icons.Warn .. diag.warning or "")
-        --   return vim.trim(ret)
-        -- end,
         offsets = {
           {
             filetype = "neo-tree",
@@ -73,49 +65,6 @@ return {
         },
       },
     },
-  },
-
-  -- statusline
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    opts = function()
-      return {
-        options = {
-          theme = "auto",
-          globalstatus = true,
-          disabled_filetypes = { statusline = { "dashboard", "alpha" } },
-        },
-        sections = {
-          lualine_a = { "mode" },
-          lualine_b = { "branch" },
-          lualine_c = {
-            { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-            { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
-            {
-              function() return require("nvim-navic").get_location() end,
-              cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
-            },
-          },
-          lualine_x = {
-            {
-              function() return "  " .. require("dap").status() end,
-              cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
-            },
-          },
-          lualine_y = {
-            { "progress", separator = " ", padding = { left = 1, right = 0 } },
-            { "location", padding = { left = 0, right = 1 } },
-          },
-          lualine_z = {
-            function()
-              return " " .. os.date("%I:%M %p")
-            end,
-          },
-        },
-        extensions = { "neo-tree", "lazy" },
-      }
-    end,
   },
 
   -- indent guides for Neovim
@@ -186,7 +135,6 @@ return {
         separator = " ",
         highlight = true,
         depth_limit = 5,
-        --icons = require("lazyvim.config").icons.kinds,
       }
     end,
   },
