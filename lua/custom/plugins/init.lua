@@ -3,6 +3,10 @@
 --
 -- See the kickstart.nvim README for more information
 
+-- tabs
+vim.keymap.set("n", "<leader><tab>]", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Tab" })
+vim.keymap.set("n", "<leader><tab>[", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous Tab" })
+
 return {
   -- helps align and justify text
   --  some default mappings to try:
@@ -17,4 +21,5 @@ return {
     end,
   },
 }
+
 
