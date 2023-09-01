@@ -118,7 +118,7 @@ return {
         end,
         desc = "Explorer NeoTree (root dir)",
       },
-      { "<leader>e", "<leader>fe", desc = "Explorer NeoTree (root dir)", remap = true },
+      --{ "<leader>e", "<leader>fe", desc = "Explorer NeoTree (root dir)", remap = true },
       -- { "<leader>e", desc = "Explorer NeoTree (root dir)", remap = true },
     },
     deactivate = function()

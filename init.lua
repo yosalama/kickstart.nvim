@@ -72,6 +72,9 @@ require('lazy').setup({
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  -- This tiny plugin adds vscode-like pictograms to neovim built-in lsp:
+  'onsails/lspkind.nvim',
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -84,7 +87,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -108,7 +111,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',          opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -122,7 +125,8 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+        vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
+          { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
         vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk, { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
         vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk, { buffer = bufnr, desc = '[P]review [H]unk' })
       end,
@@ -164,7 +168,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',         opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
@@ -306,7 +310,9 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust',
+    'tsx', 'typescript', 'vimdoc', 'vim', "elixir", "heex",
+    "eex", "html" },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -468,10 +474,48 @@ mason_lspconfig.setup_handlers {
   end
 }
 
+local lsp_options = {
+  capabilities = capabilities,
+  on_attach = function(_, bufnr) end,
+  single_file_support = true,
+}
+local lspconfig = require("lspconfig")
+
+lspconfig.tailwindcss.setup(vim.tbl_extend("force", lsp_options, {
+  filetypes = { "html", "elixir", "eelixir", "heex" , "html-eex"},
+  root_dir = lspconfig.util.root_pattern(
+    'tailwind.config.js', 'tailwind.config.ts',
+    'postcss.config.js', 'postcss.config.ts',
+    'package.json', 'node_modules', '.git', 'mix.exs'
+  ),
+  init_options = {
+    userLanguages = {
+      elixir = "html-eex",
+      eelixir = "html-eex",
+      heex = "html-eex",
+    },
+  },
+  settings = {
+    tailwindCSS = {
+      experimental = {
+        classRegex = {
+          'class[:]\\s*"([^"]*)"',
+        },
+      },
+    },
+  },
+}))
+
+lspconfig.emmet_ls.setup({
+  capabilities = capabilities,
+  filetypes = { "html", "css", "eelixir", "heex" },
+})
+
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
+local lspkind = require 'lspkind'
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
@@ -514,6 +558,44 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
   },
+  -- Adding Color in options for tailwindcss
+  window = {
+    completion = {
+      col_offset = -3 -- align the abbr and word on cursor (due to fields order below)
+    }
+  },
+  formatting = {
+    fields = { "kind", "abbr", "menu" },
+    format = lspkind.cmp_format({
+      mode = 'symbol_text', -- options: 'text', 'text_symbol', 'symbol_text', 'symbol'
+      maxwidth = 50,        -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+      menu = ({             -- showing type in menu
+        nvim_lsp = "[LSP]",
+        path = "[Path]",
+        buffer = "[Buffer]",
+        luasnip = "[LuaSnip]",
+      }),
+      before = function(entry, vim_item) -- for tailwind css autocomplete
+        if vim_item.kind == 'Color' and entry.completion_item.documentation then
+          local _, _, r, g, b = string.find(entry.completion_item.documentation, '^rgb%((%d+), (%d+), (%d+)')
+          if r then
+            local color = string.format('%02x', r) .. string.format('%02x', g) .. string.format('%02x', b)
+            local group = 'Tw_' .. color
+            if vim.fn.hlID(group) < 1 then
+              vim.api.nvim_set_hl(0, group, { fg = '#' .. color })
+            end
+            vim_item.kind = "■" -- or "⬤" or anything
+            vim_item.kind_hl_group = group
+            return vim_item
+          end
+        end
+        -- vim_item.kind = icons[vim_item.kind] and (icons[vim_item.kind] .. vim_item.kind) or vim_item.kind
+        -- or just show the icon
+        vim_item.kind = lspkind.symbolic(vim_item.kind) and lspkind.symbolic(vim_item.kind) or vim_item.kind
+        return vim_item
+      end
+    })
+  }
 }
 
 -- The line beneath this is called `modeline`. See `:help modeline`
