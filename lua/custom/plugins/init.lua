@@ -5,23 +5,14 @@
 
 -- tabs
 -- vim.keymap.set({mode}, {lhs}, {rhs}, {opts})
-vim.keymap.set("n", "<tab>]",     "<cmd>BufferLineCycleNext<cr>",  { desc = "Next Tab" })
-vim.keymap.set("n", "<tab>[",     "<cmd>BufferLineCyclePrev<cr>",  { desc = "Previous Tab" })
+vim.keymap.set("n", "<tab>]", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Tab" })
+vim.keymap.set("n", "<tab>[", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous Tab" })
 vim.keymap.set("n", "<leader>fm", ":lua MiniFiles.open()<CR>", { silent = true, desc = "Open MiniFiles" })
-
+vim.keymap.set(
+  "n", "<leader>bx", ":lua require('mini.bufremove').delete(vim.fn.bufnr('%'), false)<CR>",
+  { silent = true, desc = "Close Current Buffer" }
+)
 return {
-  -- helps align and justify text
-  --  some default mappings to try:
-  --   start = 'ga',
-  --   start_with_preview = 'gA',
-  --
-  {
-    'echasnovski/mini.align',
-    version = '*',
-    config  = function()
-      require('mini.align').setup()
-    end,
-  },
   {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -41,6 +32,18 @@ return {
       })
     end
   },
+  -- helps align and justify text
+  --  some default mappings to try:
+  --   start = 'ga',
+  --   start_with_preview = 'gA',
+  --
+  {
+    'echasnovski/mini.align',
+    version = '*',
+    config  = function()
+      require('mini.align').setup()
+    end,
+  },
   {
     'echasnovski/mini.files',
     version = false,
@@ -48,13 +51,23 @@ return {
       require("mini.files").setup({
         -- Configuration here, or leave empty to use defaults
         -- Navigate and manipulate file system:
-          -- Press j/k to navigate down/up.
-          -- Press l to expand entry under cursor: show directory or open file in the most recent window.
-          -- Press h to go to parent directory.
-          -- Type g? for more information about other available mappings.
-          -- Move as in any other buffer ($, G, f/t, etc.).
-          -- Press =; read confirmation dialog; confirm with y/<CR> or not confirm with n/<Esc>.
+        -- Press j/k to navigate down/up.
+        -- Press l to expand entry under cursor: show directory or open file in the most recent window.
+        -- Press h to go to parent directory.
+        -- Type g? for more information about other available mappings.
+        -- Move as in any other buffer ($, G, f/t, etc.).
+        -- Press =; read confirmation dialog; confirm with y/<CR> or not confirm with n/<Esc>.
       })
     end
+  },
+  {
+    --Buffer removing (unshow, delete, wipeout), which saves window layout
+    'echasnovski/mini.bufremove',
+    version = '*',
+    config  = function()
+      require("mini.files").setup({
+      })
+    end
+
   },
 }
