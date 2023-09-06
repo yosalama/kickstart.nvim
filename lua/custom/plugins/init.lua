@@ -9,9 +9,11 @@ vim.keymap.set("n", "<tab>]", "<cmd>BufferLineCycleNext<cr>", { desc = "Next Tab
 vim.keymap.set("n", "<tab>[", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous Tab" })
 vim.keymap.set("n", "<leader>fm", ":lua MiniFiles.open()<CR>", { silent = true, desc = "Open MiniFiles" })
 vim.keymap.set(
-  "n", "<leader>bx", ":lua require('mini.bufremove').delete(vim.fn.bufnr('%'), false)<CR>",
+  "n", "<tab>x", ":lua require('mini.bufremove').delete(vim.fn.bufnr('%'), false)<CR>",
   { silent = true, desc = "Close Current Buffer" }
 )
+
+
 return {
   {
     "folke/todo-comments.nvim",
@@ -65,9 +67,29 @@ return {
     'echasnovski/mini.bufremove',
     version = '*',
     config  = function()
-      require("mini.files").setup({
+      require("mini.bufremove").setup({
       })
     end
 
+  },
+  {
+    "nvim-neorg/neorg",
+    build = ":Neorg sync-parsers",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("neorg").setup {
+        load = {
+          ["core.defaults"] = {},  -- Loads default behaviour
+          ["core.concealer"] = {}, -- Adds pretty icons to your documents
+          ["core.dirman"] = {      -- Manages Neorg workspaces
+            config = {
+              workspaces = {
+                notes = "~/notes",
+              },
+            },
+          },
+        },
+      }
+    end,
   },
 }

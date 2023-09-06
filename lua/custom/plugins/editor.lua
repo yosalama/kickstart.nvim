@@ -87,6 +87,7 @@ return {
           ["<leader><tab>"] = { name = "+tabs" },
           ["<leader>b"] = { name = "+buffer" },
           ["<leader>c"] = { name = "+code" },
+          ["<leader>cb"] = { name = "+CommentBox" },
           ["<leader>f"] = { name = "+file" },
           ["<leader>g"] = { name = "+git" },
           ["<leader>gh"] = { name = "+hunks" },
