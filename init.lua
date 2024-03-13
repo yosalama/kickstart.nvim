@@ -161,9 +161,10 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
+    main = "ibl",
     opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
+      --char = '┊',
+      --show_trailing_blankline_indent = false,
     },
   },
 
@@ -285,6 +286,9 @@ require('telescope').setup {
   },
 }
 
+
+-- require("ibl").setup()
+
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
@@ -312,10 +316,9 @@ require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust',
     'tsx', 'typescript', 'vimdoc', 'vim', "elixir", "heex",
-    "eex", "html" },
-
+    "eex", "html", 'fennel', 'clojure' },
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-  auto_install = false,
+  auto_install = true,
 
   highlight = { enable = true },
   indent = { enable = true },
@@ -442,7 +445,11 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
+  clojure_lsp = {},
+  html = {},
+  tailwindcss = {},
+  emmet_ls = {},
+  elixirls = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
