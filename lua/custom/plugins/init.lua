@@ -13,6 +13,11 @@ vim.keymap.set(
   { silent = true, desc = "Close Current Buffer" }
 )
 
+-- Diffview keymaps
+vim.keymap.set('n', '<leader>gdo', ':DiffviewOpen<CR>', { desc = '[G]it [D]iff [O]pen' })
+vim.keymap.set('n', '<leader>gdc', ':DiffviewClose<CR>', { desc = '[G]it [D]iff [C]lose' })
+vim.keymap.set('n', '<leader>gdh', ':DiffviewFileHistory<CR>', { desc = '[G]it [D]iff [H]istory' })
+vim.keymap.set('n', '<leader>gdt', ':DiffviewToggleFiles<CR>', { desc = '[G]it [D]iff [T]oggle Files' })
 
 return {
   {
@@ -98,5 +103,17 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
+  },
+  {
+    'sindrets/diffview.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    cmd = { 'DiffviewOpen', 'DiffviewClose', 'DiffviewToggleFiles', 'DiffviewFocusFiles' },
+    config = function()
+      require('diffview').setup({
+        -- Add any custom configuration here
+      })
+    end,
   },
 }
